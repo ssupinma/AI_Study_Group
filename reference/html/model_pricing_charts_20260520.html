@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Model API Pricing Comparison · 2026-05-20</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 32px;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .chart-card {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 18px 50px rgba(23, 32, 51, 0.08);
+      border: 1px solid rgba(23, 32, 51, 0.06);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 21px;
+      letter-spacing: -0.02em;
+    }
+
+    .chart-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex: 0 0 auto;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 13px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .download-btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 13px;
+      background: #172033;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(23, 32, 51, 0.18);
+    }
+
+    .download-btn:hover {
+      opacity: 0.9;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      height: 520px;
+    }
+
+    .footnotes {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 18px; }
+      .chart-card { padding: 18px; border-radius: 18px; }
+      .chart-header { flex-direction: column; }
+      .canvas-wrap { height: 620px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>AI 模型 API 價格比較 · 2026-05-20</h1>
+      <p class="subtitle">單位：USD / 1M tokens。每個模型群組提供 log scale 與 linear scale 兩種視角；每張圖同時顯示 input price 與 output price。按下 Download PNG 可輸出圖片。</p>
+    </header>
+
+    <section class="chart-card">
+      <div class="chart-header">
+        <div>
+          <h2>旗艦模型 · Log scale</h2>
+          <p class="chart-note">包含頂級旗艦與高階模型。Log scale 較容易看出較低價模型之間的相對差距。</p>
+        </div>
+        <div class="actions">
+          <div class="pill">Flagship / High</div>
+          <button class="download-btn" onclick="downloadChart('flagshipLogChart', 'flagship-models-log-scale-2026-05-20.png')">Download PNG</button>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="flagshipLogChart"></canvas>
+      </div>
+      <div class="footnotes">Qwen3.6-Plus 已官方發布，但官方價格頁未直接核到價格，因此未納入圖表。</div>
+    </section>
+
+    <section class="chart-card">
+      <div class="chart-header">
+        <div>
+          <h2>旗艦模型 · Linear scale</h2>
+          <p class="chart-note">同一組旗艦模型價格，以 linear scale 呈現。這張圖最直觀呈現絕對價格差距。</p>
+        </div>
+        <div class="actions">
+          <div class="pill">Flagship / High</div>
+          <button class="download-btn" onclick="downloadChart('flagshipLinearChart', 'flagship-models-linear-scale-2026-05-20.png')">Download PNG</button>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="flagshipLinearChart"></canvas>
+      </div>
+      <div class="footnotes">Qwen3.6-Plus 已官方發布，但官方價格頁未直接核到價格，因此未納入圖表。</div>
+    </section>
+
+    <section class="chart-card">
+      <div class="chart-header">
+        <div>
+          <h2>旗艦模型（不含 GPT-5.5 Pro）· Log scale</h2>
+          <p class="chart-note">移除 GPT-5.5 Pro 後，能更清楚比較其餘旗艦模型的價格差異。Log scale 適合看相對差距。</p>
+        </div>
+        <div class="actions">
+          <div class="pill">Flagship / High</div>
+          <button class="download-btn" onclick="downloadChart('flagshipNoProLogChart', 'flagship-models-no-gpt55pro-log-scale-2026-05-20.png')">Download PNG</button>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="flagshipNoProLogChart"></canvas>
+      </div>
+      <div class="footnotes">本圖僅移除 GPT-5.5 Pro，其餘旗艦模型與高階模型保留不變。</div>
+    </section>
+
+    <section class="chart-card">
+      <div class="chart-header">
+        <div>
+          <h2>旗艦模型（不含 GPT-5.5 Pro）· Linear scale</h2>
+          <p class="chart-note">移除 GPT-5.5 Pro 後，以 linear scale 直接看其餘旗艦模型的絕對價格差距。</p>
+        </div>
+        <div class="actions">
+          <div class="pill">Flagship / High</div>
+          <button class="download-btn" onclick="downloadChart('flagshipNoProLinearChart', 'flagship-models-no-gpt55pro-linear-scale-2026-05-20.png')">Download PNG</button>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="flagshipNoProLinearChart"></canvas>
+      </div>
+      <div class="footnotes">本圖僅移除 GPT-5.5 Pro，其餘旗艦模型與高階模型保留不變。</div>
+    </section>
+
+    <section class="chart-card">
+      <div class="chart-header">
+        <div>
+          <h2>中低價模型 · Log scale</h2>
+          <p class="chart-note">包含中價、高吞吐與低價模型。Log scale 較容易比較低價模型間的倍數差。</p>
+        </div>
+        <div class="actions">
+          <div class="pill">Mid / Low</div>
+          <button class="download-btn" onclick="downloadChart('budgetLogChart', 'mid-low-models-log-scale-2026-05-20.png')">Download PNG</button>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="budgetLogChart"></canvas>
+      </div>
+      <div class="footnotes">GLM 中國區人民幣換算價未納入主圖，避免與國際 USD 定價重複。</div>
+    </section>
+
+    <section class="chart-card">
+      <div class="chart-header">
+        <div>
+          <h2>中低價模型 · Linear scale</h2>
+          <p class="chart-note">同一組中低價模型價格，以 linear scale 呈現。這張圖最直觀呈現絕對價格差距。</p>
+        </div>
+        <div class="actions">
+          <div class="pill">Mid / Low</div>
+          <button class="download-btn" onclick="downloadChart('budgetLinearChart', 'mid-low-models-linear-scale-2026-05-20.png')">Download PNG</button>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="budgetLinearChart"></canvas>
+      </div>
+      <div class="footnotes">GLM 中國區人民幣換算價未納入主圖，避免與國際 USD 定價重複。</div>
+    </section>
+  </main>
+
+  <script>
+    const flagshipData = [
+      { provider: "OpenAI", model: "gpt-5.5-pro", input: 30.000, output: 180.000 },
+      { provider: "OpenAI", model: "gpt-5.5", input: 5.000, output: 30.000 },
+      { provider: "Anthropic", model: "Claude Opus 4.7", input: 5.000, output: 25.000 },
+      { provider: "Google", model: "Gemini 3.5 Flash", input: 1.500, output: 9.000 },
+      { provider: "Alibaba / Qwen", model: "qwen3-max", input: 0.359, output: 1.434 },
+      { provider: "Anthropic", model: "Claude Sonnet 4.6", input: 3.000, output: 15.000 },
+      { provider: "OpenAI", model: "gpt-5.4", input: 2.500, output: 15.000 },
+      { provider: "Z.ai / GLM", model: "GLM-5.1", input: 1.400, output: 4.400 },
+      { provider: "Alibaba / Qwen", model: "qwen3.5-plus", input: 0.115, output: 0.688 }
+    ];
+
+    const flagshipNoProData = flagshipData.filter(row => row.model !== "gpt-5.5-pro");
+
+    const budgetData = [
+      { provider: "OpenAI", model: "gpt-5.4-mini", input: 0.750, output: 4.500 },
+      { provider: "Anthropic", model: "Claude Haiku 4.5", input: 1.000, output: 5.000 },
+      { provider: "MiniMax", model: "MiniMax-M2.7", input: 0.300, output: 1.200 },
+      { provider: "MiniMax", model: "MiniMax-M2.5", input: 0.300, output: 1.200 },
+      { provider: "Alibaba / Qwen", model: "qwen-plus-latest non-thinking", input: 0.115, output: 0.287 },
+      { provider: "Alibaba / Qwen", model: "qwen-plus-latest thinking", input: 0.115, output: 1.147 },
+      { provider: "OpenAI", model: "gpt-5.4-nano", input: 0.200, output: 1.250 },
+      { provider: "Alibaba / Qwen", model: "qwen3.5-flash", input: 0.029, output: 0.287 },
+      { provider: "Z.ai / GLM", model: "GLM-5-Turbo", input: 1.200, output: 4.000 }
+    ];
+
+    function formatUSD(value) {
+      if (value >= 10) return `$${value.toFixed(0)}`;
+      if (value >= 1) return `$${value.toFixed(2)}`;
+      return `$${value.toFixed(3)}`;
+    }
+
+    function downloadChart(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const tempCanvas = document.createElement("canvas");
+      const scale = 2;
+      tempCanvas.width = canvas.width * scale;
+      tempCanvas.height = canvas.height * scale;
+
+      const ctx = tempCanvas.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      ctx.scale(scale, scale);
+      ctx.drawImage(canvas, 0, 0);
+
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = tempCanvas.toDataURL("image/png", 1.0);
+      link.click();
+    }
+
+    function buildChart(canvasId, rows, scaleType) {
+      const ctx = document.getElementById(canvasId);
+      const labels = rows.map(row => row.model);
+
+      return new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Input price",
+              data: rows.map(row => row.input),
+              backgroundColor: "rgba(59, 130, 246, 0.78)",
+              borderColor: "rgba(59, 130, 246, 1)",
+              borderWidth: 1,
+              borderRadius: 8
+            },
+            {
+              label: "Output price",
+              data: rows.map(row => row.output),
+              backgroundColor: "rgba(249, 115, 22, 0.78)",
+              borderColor: "rgba(249, 115, 22, 1)",
+              borderWidth: 1,
+              borderRadius: 8
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: {
+              position: "top",
+              labels: {
+                usePointStyle: true,
+                boxWidth: 8,
+                boxHeight: 8,
+                font: { size: 13, weight: "600" }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                title(items) {
+                  const row = rows[items[0].dataIndex];
+                  return `${row.model} · ${row.provider}`;
+                },
+                label(item) {
+                  return `${item.dataset.label}: ${formatUSD(item.raw)} / 1M tokens`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { maxRotation: 45, minRotation: 30, font: { size: 12 } },
+              grid: { display: false }
+            },
+            y: {
+              type: scaleType,
+              min: scaleType === "logarithmic" ? 0.02 : 0,
+              title: {
+                display: true,
+                text: `USD / 1M tokens, ${scaleType === "logarithmic" ? "log scale" : "linear scale"}`,
+                font: { size: 13, weight: "700" }
+              },
+              ticks: {
+                callback(value) {
+                  if (scaleType === "logarithmic") {
+                    const shown = [0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200];
+                    return shown.includes(Number(value)) ? `$${value}` : "";
+                  }
+                  return `$${value}`;
+                }
+              },
+              grid: { color: "rgba(23, 32, 51, 0.08)" }
+            }
+          }
+        }
+      });
+    }
+
+    buildChart("flagshipLogChart", flagshipData, "logarithmic");
+    buildChart("flagshipLinearChart", flagshipData, "linear");
+    buildChart("flagshipNoProLogChart", flagshipNoProData, "logarithmic");
+    buildChart("flagshipNoProLinearChart", flagshipNoProData, "linear");
+    buildChart("budgetLogChart", budgetData, "logarithmic");
+    buildChart("budgetLinearChart", budgetData, "linear");
+  </script>
+</body>
+</html>
